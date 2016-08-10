@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <style>
+        body {
+            background: #F7FAFC;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        .login {
+            width: 300px;
+            height: auto;
+            overflow: hidden;
+            margin: 10% auto 0 auto;
+            padding: 40px;
+            box-shadow: 0 -15px 30px #dfe9f8;
+            border-radius: 5px;
+        }
+
+            .login .login_name {
+                font-size: 20px;
+                font-weight: bold;
+                text-align: center;
+                color: #808080;
+                font-family: 'Microsoft YaHei';
+                letter-spacing: 2px;
+                margin-bottom: 15px;
+            }
+
+                .login .login_name strong {
+                    display: block;
+                }
+
+                .login .login_name em {
+                    display: block;
+                    font-size: 12px;
+                    margin-top: 8px;
+                }
+
+            .login .login_txt {
+                border: 1px solid;
+                border-radius: 3px;
+                border-color: #ccc;
+                background-color: #fff;
+            }
+
+                .login .login_txt .login_txtbx {
+                    padding: 8px;
+                    font-size: 16px;
+                    height: 30px;
+                    line-height: 16px;
+                    width: 93%;
+                    background: #fff;
+                    color: #808080;
+                    border: none;
+                    border-radius: 3px;
+                    outline: none;
+                }
+
+            .login .login_button {
+                background-color: transparent;
+                width: 100%;
+                border: 1px solid;
+                height: 40px;
+                border-radius: 5px;
+                border-color: #51ABED;
+                font-size: 17px;
+                color: #808080;
+                -webkit-transition: all 0.4s;
+                -moz-transition: all 0.4s;
+                transition: all 0.4s;
+            }
+
+                .login .login_button:hover {
+                    cursor: pointer;
+                    background-color: #51ABED;
+                    color: #fff;
+                }
+
+        .login .copyright {
+            font-size: 12px;
+            text-align: center;
+            color: #808080;
+            font-family: 'Microsoft YaHei';
+        }
+
+        #canvas {
+            z-index: -1;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="login">
+        <div class="login_name">
+            <strong>后台管理系统</strong>
+            <em>Management System</em>
+        </div>
+
+        <div class="login_txt">
+            <input type="text" class="login_txtbx" placeholder="账号" />
+            <div style="border-bottom: 1px solid; border-color: #ccc"></div>
+            <input type="text" class="login_txtbx" placeholder="密码" />
+        </div>
+        <br />
+        <input type="submit" class="login_button" value="登录" />
+        <div class="copyright">
+            <p>© 2016 yuanzh 版权所有</p>
+        </div>
+    </div>
+    <script>
+        //定义画布宽高和生成点的个数
+        var WIDTH = screen.availWidth, HEIGHT = screen.availHeight, POINT = 18;
+
+        var canvas = document.getElementById("canvas");
+        canvas.width = WIDTH,
+		canvas.height = HEIGHT;
+        var context = canvas.getContext("2d");
+        context.strokeStyle = "rgba(0,0,0,0.02)";//线条样式
+        context.strokeWidth = 1;                 //线条宽度
+        context.fillStyle = "rgba(0,0,0,0.05)";  //圆点填充样式
+
+        var circleArr = [];
+
+
+        //定义圆点：xy坐标，r半径，每次移动距离
+        function Circle(x, y, r, moveX, moveY) {
+            this.x = x;
+            this.y = y;
+            this.r = r;
+            this.moveX = moveX;
+            this.moveY = moveY;
+        }
+        // 绘制圆点
+        function drawCricle(cxt, x, y, r) {
+            cxt.beginPath()
+            cxt.arc(x, y, r, 0, 2 * Math.PI)
+            cxt.closePath()
+            cxt.fill();
+        }
+        //绘制线条
+        function drawLine(cxt, x, y, _x, _y, o) {
+            cxt.beginPath();
+            cxt.strokeStyle = "rgba(0,0,0," + o + ")";
+            cxt.moveTo(x, y);
+            cxt.lineTo(_x, _y);
+            cxt.closePath();
+            cxt.stroke();
+        }
+        //初始化生成POINT个原点
+        function init() {
+            circleArr = [];
+            for (var i = 0; i < POINT; i++) {
+                circleArr.push(newCricle(num(WIDTH), num(HEIGHT), num(15, 10), num(10, -10) / 40, num(10, -10) / 40));
+            }
+        }
+        //生成max和min之间的随机数
+        function num(max, _min) {
+            var min = arguments[1] || 0;
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+
+        //创建圆点
+        function newCricle(x, y, r, moveX, moveY) {
+            var circle = new Circle(x, y, r, moveX, moveY)
+            return circle;
+        }
+        //每帧绘制
+        function draw() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            for (var i = 0; i < POINT; i++) {
+                var cir = circleArr[i];
+                cir.x += cir.moveX;
+                cir.y += cir.moveY;
+                if (cir.x > (WIDTH + cir.r))
+                    cir.x = 0;
+                else if (cir.x < (0 - cir.r))
+                    cir.x = WIDTH;
+                if (cir.y > (HEIGHT + cir.r))
+                    cir.y = 0;
+                else if (cir.y < (0 - cir.r))
+                    cir.y = HEIGHT;
+                drawCricle(context, cir.x, cir.y, cir.r);
+
+                for (var j = 0; j < POINT; j++) {
+                    if ((i + j) < POINT) {
+                        var A = Math.abs(circleArr[i + j].x - circleArr[i].x),
+							B = Math.abs(circleArr[i + j].y - circleArr[i].y);
+                        var lineLength = Math.sqrt(A * A + B * B);
+                        if (lineLength < (HEIGHT / 2)) {
+                            var C = 1 / lineLength * 7 - 0.009;
+                            var lineOpacity = C > 0.03 ? 0.03 : C;
+                            if (lineOpacity > 0) {
+                                drawLine(context, circleArr[i].x, circleArr[i].y, circleArr[i + j].x, circleArr[i + j].y, lineOpacity);
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+        //调用执行
+        window.onload = function () {
+            init();
+            setInterval(function () {
+                draw();
+            }, 16);
+        }
+    </script>
+</body>
+</html>
