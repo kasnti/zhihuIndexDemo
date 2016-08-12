@@ -8,19 +8,18 @@
             background: #F7FAFC;
             overflow: hidden;
             margin: 0;
-            padding: 0;
         }
-
+        /*登录框式样*/
         .login {
             width: 300px;
             height: auto;
             overflow: hidden;
-            margin: 10% auto 0 auto;
             padding: 40px;
+            margin: 10% auto 0 auto;
             box-shadow: 0 -15px 30px #dfe9f8;
             border-radius: 5px;
         }
-
+            /*登录框标题式样*/
             .login .login_name {
                 font-size: 20px;
                 font-weight: bold;
@@ -30,24 +29,24 @@
                 letter-spacing: 2px;
                 margin-bottom: 15px;
             }
-
+                /*登录框标题中strong标签式样*/
                 .login .login_name strong {
                     display: block;
                 }
-
+                /*登录框标题中em标签式样*/
                 .login .login_name em {
                     display: block;
                     font-size: 12px;
                     margin-top: 8px;
                 }
-
+            /*包含账号密码文本框的div的式样*/
             .login .login_txt {
                 border: 1px solid;
                 border-radius: 3px;
                 border-color: #ccc;
                 background-color: #fff;
             }
-
+                /*账号密码文本框式样*/
                 .login .login_txt .login_txtbx {
                     padding: 8px;
                     font-size: 16px;
@@ -60,7 +59,7 @@
                     border-radius: 3px;
                     outline: none;
                 }
-
+            /*登录按钮式样*/
             .login .login_button {
                 background-color: transparent;
                 width: 100%;
@@ -74,23 +73,31 @@
                 -moz-transition: all 0.4s;
                 transition: all 0.4s;
             }
-
+                /*登录按钮hover式样*/
                 .login .login_button:hover {
                     cursor: pointer;
                     background-color: #51ABED;
                     color: #fff;
                 }
-
-        .login .copyright {
-            font-size: 12px;
-            text-align: center;
-            color: #808080;
-            font-family: 'Microsoft YaHei';
-        }
-
+            /*版权字样*/
+            .login .copyright {
+                font-size: 12px;
+                text-align: center;
+                color: #808080;
+                font-family: 'Microsoft YaHei';
+            }
+            /*canvas的样式设定*/
         #canvas {
             z-index: -1;
             position: absolute;
+            top:0px;
+            left:0px;
+            /*加上top和left0px属性，
+                是因为chrome浏览器下，
+                login样式中margin:10% auto 0 auto;这个属性控制的div
+                让canvas也跟着margin-top了10%
+                所以添加这两个属性让他归位
+            */
         }
     </style>
 </head>
@@ -113,9 +120,11 @@
             <p>© 2016 yuanzh 版权所有</p>
         </div>
     </div>
+    
     <script>
         //定义画布宽高和生成点的个数
-        var WIDTH = screen.availWidth, HEIGHT = screen.availHeight, POINT = 18;
+
+        var WIDTH = window.innerWidth, HEIGHT = window.innerHeight, POINT = 18;
 
         var canvas = document.getElementById("canvas");
         canvas.width = WIDTH,
@@ -149,7 +158,6 @@
             cxt.strokeStyle = "rgba(0,0,0," + o + ")";
             cxt.moveTo(x, y);
             cxt.lineTo(_x, _y);
-            cxt.closePath();
             cxt.stroke();
         }
         //初始化生成POINT个原点
